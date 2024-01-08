@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  z-index: 10;
+  z-index: 1;
   position: fixed;
   top: 0;
   left: 0;
@@ -16,13 +16,13 @@ export const Overlay = styled.div`
   z-index: -1;
 
   --dot-bg: black;
-  --dot-color: #f6f5f3;
+  --dot-color: rgba(150, 150, 150, 255);
   --dot-size: 0.3px;
-  --dot-space: 10px;
+  --dot-space: 15px;
   top: 0;
   left: 0;
 
-  opacity: 0.3;
+  opacity: 1;
   background: linear-gradient(
         90deg,
         var(--dot-bg) calc(var(--dot-space) - var(--dot-size)),

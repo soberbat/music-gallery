@@ -1,32 +1,42 @@
-import React, { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 import { Container } from "./Scene.styled";
-import { Scene } from "./scene.class";
+import { Scene } from "./class/Scene";
 
-const Environment = () => {
-  const rendererWrapper = useRef<HTMLDivElement | null>(null);
-  const scene = useRef<Scene | null>(null);
-  const [progress, setProgress] = useState<number>(0);
+export interface IEnvironment {
+  onProgres?: (progres: number) => void;
+  sceneRef?: React.MutableRefObject<Scene | null>;
+  onPlay?: (trackID: number, isPlaying: boolean) => void;
+  onRotation?: (isAnimating: boolean) => void;
+  trackProgres?: number;
+}
 
-  const handleProgress = (progress: number) => {
-    console.log(progress);
-  };
+const Environment = memo(
+  ({ sceneRef, onProgres, onPlay, trackProgres, onRotation }: IEnvironment) => {
+    const rendererWrapper = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    !scene.current &&
-      (async () => {
-        scene.current = new Scene({
-          rendererContainer: rendererWrapper.current,
-          handleProgress: handleProgress,
-        });
+    useEffect(
+      () => sceneRef?.current?.setTrackProgress(trackProgres!),
+      [trackProgres]
+    );
 
-        await scene.current.init();
-        scene.current.animate();
-      })();
-  }, []);
+    useEffect(() => {
+      if (sceneRef)
+        !sceneRef.current &&
+          (async () => {
+            sceneRef.current = new Scene({
+              rendererContainer: rendererWrapper.current,
+              handleProgress: onProgres!,
+              onRotation: onRotation!,
+              onPlay: onPlay!,
+            });
 
-  useEffect(() => {}, [progress]);
+            await sceneRef.current.init();
+            sceneRef.current.animate();
+          })();
+    }, []);
 
-  return <Container ref={rendererWrapper}></Container>;
-};
+    return <Container ref={rendererWrapper} />;
+  }
+);
 
 export default Environment;
