@@ -8,7 +8,6 @@ import Player from "./components/Player/Player";
 import MainNavigation from "./components/MainNavigation/MainNavigation";
 import {
   AnimationContainer,
-  Button,
   InnerContainer,
   NavigationContainer,
 } from "./styles/Main.styles";
@@ -18,11 +17,10 @@ function App() {
   const scene = useRef<Scene | null>(null);
   const [progres, setProgres] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [_, setIsAnimating] = useState(false);
   const [track, setTrack] = useState<string | undefined>(undefined);
   const [trackID, setTrackID] = useState<number | null>();
   const [trackProgress, setTrackProgress] = useState(0);
-  const [isInfoPageVisible, setIsInfoPageVisible] = useState(false);
 
   const onNavigationProgress = useCallback((progres: number) => {
     setProgres(progres);
@@ -49,8 +47,6 @@ function App() {
     setIsPlaying(shouldPlay);
     setTrackID(trackID + 1);
   }, []);
-
-  const handlePlay = (isPlaying: boolean) => setIsPlaying(isPlaying);
 
   return (
     <AnimationContainer key="main">

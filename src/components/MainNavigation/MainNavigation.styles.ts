@@ -35,7 +35,7 @@ export const NameContainer = styled.div`
   height: 5vh;
 `;
 
-export const PaneName = styled(motion.h3).attrs({
+export const PaneName = styled(motion.span).attrs({
   animate: { opacity: 1 },
   initial: { opacity: 0 },
 })``;

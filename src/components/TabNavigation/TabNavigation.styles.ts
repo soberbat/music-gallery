@@ -56,7 +56,7 @@ export const PaneRec = styled.div<IPaneRec>`
 
 export const Panes = styled(motion.div).attrs<IInnerContainer>(
   ({ activePane, width }) => ({
-    animate: computeTransition(width, activePane),
+    animate: computeTransition(width, activePane!),
     transition: { type: "spring" },
     initial: false,
   })

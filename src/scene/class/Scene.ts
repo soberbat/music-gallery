@@ -17,6 +17,7 @@ interface tweenTo {
 
 type OnWheelHandler = (
   e?: WheelEvent,
+  //@ts-ignore
   triggeredByNavigation: boolean,
   progress?: number,
   isNext?: Boolean
@@ -47,7 +48,7 @@ export class Scene {
   radius: number = 16;
   trackProgres = 0;
   isAnimating = false;
-  timeOutID = 0;
+  timeOutID: NodeJS.Timeout | null = null;
   prevValue = { x: 0, y: 0 };
   angleIncrement = (2 * Math.PI) / 15;
   panes: Pane[] = [];
@@ -202,7 +203,7 @@ export class Scene {
   };
 
   onWheel: OnWheelHandler = (
-    e,
+    _,
     triggeredByNavigation,
     progress = 0,
     isNext = true
@@ -232,7 +233,7 @@ export class Scene {
   };
 
   onWheelAnimationStart = () => {
-    clearTimeout(this.timeOutID);
+    clearTimeout(this.timeOutID!);
     this.handleRotation(true);
     this.isAnimating = true;
   };

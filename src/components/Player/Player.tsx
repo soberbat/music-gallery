@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IEnvironment } from "../../scene/Envrionment";
 import { Howl } from "howler";
 import * as S from "./Player.styles";
 import { AnimatePresence } from "framer-motion";
@@ -31,7 +30,7 @@ const Player = ({ trackSrc, onTrackProgres, isPlaying, trackID }: IPlayer) => {
     if (trackPlayedBefore) {
       trackPlayedBefore.progress = trackProgress!;
     } else {
-      progresConfig.current?.push({ src: trackSrc, progress: trackProgress });
+      progresConfig.current?.push({ src: trackSrc!, progress: trackProgress });
     }
   };
 

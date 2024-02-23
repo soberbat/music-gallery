@@ -1,6 +1,4 @@
-import React from "react";
 import { Container, DirectionIndicator, Text } from "./NavigationButton.styles";
-import MainNavigation from "../MainNavigation/MainNavigation";
 
 interface IProps {
   isNextButton?: boolean;
