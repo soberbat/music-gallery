@@ -34,3 +34,16 @@ export const Button = styled.div`
   border-radius: 0.5px;
   font-weight: 400;
 `;
+
+export const AnimationContainer = styled(motion.div).attrs({
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { filter: "blur(15px)" },
+  transition: { duration: 0.5 },
+})`
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+`;

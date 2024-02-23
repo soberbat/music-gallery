@@ -1,8 +1,10 @@
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/Addons.js";
 import { PaneData } from "./type";
+import { Tween } from "@tweenjs/tween.js";
 
 export class Pane extends THREE.Group {
+  lastTrackProgress: number;
   isVideoPane: boolean;
   isPlaying: boolean;
   isHovered: boolean;
@@ -15,6 +17,7 @@ export class Pane extends THREE.Group {
   initialRotation: THREE.Euler;
   hasContentLoaded: boolean;
   progresOverlay: THREE.Mesh | null = null;
+  buttonOverlay: THREE.Mesh | null = null;
   angleIncrement = (2 * Math.PI) / 15;
   trackProgres = 0;
   radius = 16;
@@ -31,6 +34,7 @@ export class Pane extends THREE.Group {
     this.hasContentLoaded = false;
     this.textureLoader = new THREE.TextureLoader();
     this.initialRotation = new THREE.Euler();
+    this.lastTrackProgress = 0;
   }
 
   loadTexture = async (path: string) => {
@@ -52,6 +56,7 @@ export class Pane extends THREE.Group {
     }
 
     if (isVideoPane && isPaneBase) {
+      console.log(this.paneID);
       texture = this.initVideoTexture();
     } else {
       texture = await this.loadTexture(path);
@@ -62,18 +67,6 @@ export class Pane extends THREE.Group {
     return new THREE.Mesh(geometry, material);
   };
 
-  calculateWidth = () => {
-    const widthInUnits = 15;
-    const heightInUnits = 9;
-    const pixelsPerUnit = 10;
-    const devicePixelRatio = window.devicePixelRatio || 1;
-
-    const widthInPixels = widthInUnits * pixelsPerUnit * devicePixelRatio;
-    const heightInPixels = heightInUnits * pixelsPerUnit * devicePixelRatio;
-
-    console.log("Width in Pixels:", widthInPixels);
-    console.log("Height in Pixels:", heightInPixels);
-  };
   createMaterial = (texture: THREE.Texture, isPaneBase: boolean) => {
     return new THREE.MeshBasicMaterial({
       map: texture,
@@ -83,16 +76,16 @@ export class Pane extends THREE.Group {
   };
 
   createProgresOverlay = () => {
-    const geometry = new RoundedBoxGeometry(3, 9, 0.001);
+    const geometry = new RoundedBoxGeometry(1, 9, 0.001);
     const material = new THREE.MeshBasicMaterial({
       color: "black",
-      opacity: 0.3,
+      opacity: 0,
       transparent: true,
       side: THREE.FrontSide,
     });
 
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.z = 0.1;
+    mesh.position.z = 0.5;
     return mesh;
   };
 
@@ -130,20 +123,29 @@ export class Pane extends THREE.Group {
 
   init = async () => {
     this.positionPane();
-    this.initVideoTexture();
+    this.isVideoPane && this.initVideoTexture();
     await this.addPanesToScene();
     this.animate();
   };
 
+  animateOpacity = (opacity: number) => {
+    new Tween(this.progresOverlay!.material).to({ opacity }, 200).start();
+  };
+
   updateProgresOverlay = () => {
-    const trackProgres = this.trackProgres;
-    const paneWidth = this.paneWidth;
-    const scaleX = (paneWidth * trackProgres) / 100;
-    this.progresOverlay!.scale.x = scaleX / 3;
+    if (isNaN(this.trackProgres)) return;
+    const scaleX = (this.paneWidth * this.trackProgres) / 100;
+    this.progresOverlay!.scale.x = scaleX;
+    this.animateOpacity(0.3);
   };
 
   animate() {
     requestAnimationFrame(this.animate.bind(this));
-    this.updateProgresOverlay();
+    if (this.isPlaying) {
+      this.updateProgresOverlay();
+    } else {
+      this.animateOpacity(0);
+      // this.progresOverlay!.scale.x = 0;
+    }
   }
 }

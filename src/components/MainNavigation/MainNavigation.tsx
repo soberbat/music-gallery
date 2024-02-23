@@ -1,19 +1,37 @@
+import { Panes } from "../../scene/class/config";
+import { PANECOUNT } from "../../utils/config";
 import NavigationButton from "../NavigationButton/NavigationButton";
 import {
   Container,
-  Dropdown,
   InnerContainer,
   ButtonMirror,
-} from "./MainNavigation.styled";
+  NameContainer,
+  PaneName,
+} from "./MainNavigation.styles";
 
-export default function MainNavigation() {
+interface MainNavigation {
+  onClick: (isForwards: boolean) => void;
+  progress: number;
+}
+
+const MainNavigation = ({ onClick, progress }: MainNavigation) => {
+  const currentPaneName = Panes[progress % PANECOUNT].paneName;
+
   return (
     <Container>
       <InnerContainer>
-        <NavigationButton />
-        <Dropdown />
-        <ButtonMirror className="next" isNextButton={true} />
+        <NavigationButton onClick={() => onClick(false)} />
+        <NameContainer>
+          <PaneName key={progress}>{currentPaneName}</PaneName>
+        </NameContainer>
+        <ButtonMirror
+          className=""
+          isNextButton={true}
+          onClick={() => onClick(true)}
+        />
       </InnerContainer>
     </Container>
   );
-}
+};
+
+export default MainNavigation;

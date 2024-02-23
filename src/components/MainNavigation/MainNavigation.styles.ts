@@ -4,7 +4,7 @@ import NavigationButton from "../NavigationButton/NavigationButton";
 
 export const Container = styled.div`
   position: absolute;
-  width: 35vw;
+  width: 40vw;
   height: auto;
   z-index: 2;
   top: 50%;
@@ -18,14 +18,24 @@ export const InnerContainer = styled.div`
   display: flex;
 `;
 
-export const Dropdown = styled.div`
-  flex: 1;
-  background-color: #161616;
-`;
-
 export const ButtonMirror = styled(NavigationButton)`
   flex-direction: row-reverse;
   img {
     transform: rotate(180deg);
   }
 `;
+
+export const NameContainer = styled.div`
+  flex: 1;
+  margin: 0 0.2rem;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: #161616;
+  height: 5vh;
+`;
+
+export const PaneName = styled(motion.h3).attrs({
+  animate: { opacity: 1 },
+  initial: { opacity: 0 },
+})``;

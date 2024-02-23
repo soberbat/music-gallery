@@ -3,20 +3,20 @@ import { Container } from "./Scene.styled";
 import { Scene } from "./class/Scene";
 
 export interface IEnvironment {
-  onProgres?: (progres: number) => void;
-  sceneRef?: React.MutableRefObject<Scene | null>;
-  onPlay?: (trackID: number, isPlaying: boolean) => void;
-  onRotation?: (isAnimating: boolean) => void;
-  trackProgres?: number;
+  onProgres: (progres: number) => void;
+  sceneRef: React.MutableRefObject<Scene | null>;
+  onPlay: (trackID: number, isPlaying: boolean) => void;
+  onRotate: (isAnimating: boolean) => void;
+  trackProgress: number;
 }
 
 const Environment = memo(
-  ({ sceneRef, onProgres, onPlay, trackProgres, onRotation }: IEnvironment) => {
+  ({ sceneRef, onProgres, onPlay, trackProgress, onRotate }: IEnvironment) => {
     const rendererWrapper = useRef<HTMLDivElement | null>(null);
 
     useEffect(
-      () => sceneRef?.current?.setTrackProgress(trackProgres!),
-      [trackProgres]
+      () => sceneRef?.current?.setTrackProgress(trackProgress),
+      [trackProgress]
     );
 
     useEffect(() => {
@@ -26,7 +26,7 @@ const Environment = memo(
             sceneRef.current = new Scene({
               rendererContainer: rendererWrapper.current,
               handleProgress: onProgres!,
-              onRotation: onRotation!,
+              onRotation: onRotate!,
               onPlay: onPlay!,
             });
 

@@ -1,10 +1,8 @@
 import * as THREE from "three";
 import * as TWEEN from "@tweenjs/tween.js";
-import _, { DebouncedFunc, partial } from "lodash";
+import _ from "lodash";
 import { Pane } from "./Pane";
 import { Panes } from "./config";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
-import { MouseEventHandler, WheelEventHandler } from "react";
 
 interface SceneProps {
   rendererContainer: HTMLDivElement | null;
@@ -20,7 +18,8 @@ interface tweenTo {
 type OnWheelHandler = (
   e?: WheelEvent,
   triggeredByNavigation: boolean,
-  progress?: number
+  progress?: number,
+  isNext?: Boolean
 ) => void;
 
 type IntersectionType = Array<THREE.Object3D<THREE.Object3DEventMap> & Pane>;
@@ -34,14 +33,10 @@ export class Scene {
   _raycaster: THREE.Raycaster;
   _pointer: THREE.Vector2;
   _ratio: number;
-
-  isPlaying = false;
-
   handleProgress: (progress: number) => void;
   handleRotation: (isAnimating: boolean) => void;
   onPlay: (trackID: number, isPlaying: boolean) => void;
   wheelHandler: unknown;
-
   paneGroup: THREE.Group<THREE.Object3DEventMap>;
   sphere!: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
   typeCastedPanes!: IntersectionType;
@@ -55,6 +50,9 @@ export class Scene {
   timeOutID = 0;
   prevValue = { x: 0, y: 0 };
   angleIncrement = (2 * Math.PI) / 15;
+  panes: Pane[] = [];
+  isPlaying = false;
+  fullCircleCount = 0;
 
   constructor({
     rendererContainer,
@@ -96,7 +94,7 @@ export class Scene {
     this.resetPlaneRotations();
 
     document.addEventListener("wheel", this.createDebouncedEventListener());
-    document.addEventListener("click", this.clickHandler);
+    this._rendererContainer!.addEventListener("click", this.clickHandler);
   }
 
   async init() {
@@ -126,11 +124,14 @@ export class Scene {
   addPanes = async () => {
     const paneWidth = this.paneWidth;
 
-    Panes.forEach(async (pane, paneID) => {
-      const paneItem = new Pane({ ...pane, paneWidth, paneID });
-      await paneItem.init();
-      this.sphere.add(paneItem);
-    });
+    this.panes = await Promise.all(
+      Panes.map(async (pane, paneID) => {
+        const paneItem = new Pane({ ...pane, paneWidth, paneID });
+        await paneItem.init();
+        this.sphere.add(paneItem);
+        return paneItem;
+      })
+    );
   };
 
   resetPlaneRotations = () => {
@@ -157,9 +158,11 @@ export class Scene {
   };
 
   setTrackProgress = (progres: number) => {
-    const activePane = this.typeCastedPanes.find((pane) => pane.isActive);
+    const activePane = this.typeCastedPanes.find((pane) => pane.isPlaying);
     if (activePane) {
       activePane.trackProgres = progres;
+    } else {
+      this.typeCastedPanes.forEach((pane) => (pane.trackProgres = 0));
     }
   };
 
@@ -168,14 +171,17 @@ export class Scene {
     this._pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
     this._raycaster.setFromCamera(this._pointer, this._camera);
 
-    const intersects = this._raycaster.intersectObjects(this.typeCastedPanes);
+    const intersect = this._raycaster.intersectObjects(this.typeCastedPanes)[0];
+    const paneIntersected = intersect.object.parent as Pane;
 
-    intersects.map(({ object: { parent } }) => {
-      this.isPlaying = !this.isPlaying;
-      this.onPlay(parent?.paneID, this.isPlaying);
+    this.panes.forEach(
+      (pane) => pane !== paneIntersected && (pane.isPlaying = false)
+    );
 
-      console.log(parent?.isActive);
-    });
+    if (paneIntersected) {
+      paneIntersected.isPlaying = !paneIntersected.isPlaying;
+      this.onPlay(paneIntersected?.paneID, paneIntersected.isPlaying);
+    }
   };
 
   createDebouncedEventListener = () => {
@@ -188,9 +194,27 @@ export class Scene {
     ) => unknown;
   };
 
-  onWheel: OnWheelHandler = (e, triggeredByNavigation, progress = 0): void => {
-    triggeredByNavigation ? (this.progress = -progress) : this.progress--;
+  check360degRotation = () => {
+    if (this.progress % 15 === 0) {
+      this.fullCircleCount++;
+      console.log("update modulo");
+    }
+  };
 
+  onWheel: OnWheelHandler = (
+    e,
+    triggeredByNavigation,
+    progress = 0,
+    isNext = true
+  ): void => {
+    console.log(progress);
+    if (triggeredByNavigation) {
+      this.progress = -(progress + this.fullCircleCount * 15);
+    } else {
+      isNext ? this.progress-- : this.progress++;
+    }
+
+    this.check360degRotation();
     this.handleProgress(Math.abs(this.progress));
 
     const angleIncrement = (2 * Math.PI) / 15;

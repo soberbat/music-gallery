@@ -10,6 +10,11 @@ export const Container = styled.button`
   align-items: center;
   justify-content: center;
   gap: 0.3vw;
+  outline: none;
+
+  &:focus {
+    outline: none;
+  }
 
   &:hover {
     background-color: #4a4a4a;

@@ -21,7 +21,10 @@ const TabNavigation = memo(
     const progressModulo = progres! % PANECOUNT;
     const [width, setwidth] = useState(0);
 
-    const showIndex = useCallback((i: number) => (i === PANECOUNT ? 0 : i), []);
+    const showIndex = useCallback(
+      (i: number) => (i === PANECOUNT ? 0 : i + 1),
+      []
+    );
 
     useEffect(() => {
       if (!containerRef.current) return;

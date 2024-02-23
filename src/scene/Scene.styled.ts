@@ -13,7 +13,7 @@ export const Overlay = styled.div`
   width: 100vw;
   height: 100vh;
   position: fixed;
-  z-index: -1;
+  z-index: 0;
 
   --dot-bg: black;
   --dot-color: rgba(150, 150, 150, 255);
