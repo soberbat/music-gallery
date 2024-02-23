@@ -48,7 +48,7 @@ export class Scene {
   radius: number = 16;
   trackProgres = 0;
   isAnimating = false;
-  timeOutID: NodeJS.Timeout | null = null;
+  timeOutID: number = 0;
   prevValue = { x: 0, y: 0 };
   angleIncrement = (2 * Math.PI) / 15;
   panes: Pane[] = [];
@@ -239,6 +239,7 @@ export class Scene {
   };
 
   onWheelAnimationEnd = () => {
+    //@ts-ignore
     this.timeOutID = setTimeout(() => {
       this.handleRotation(false);
       this.isAnimating = false;
