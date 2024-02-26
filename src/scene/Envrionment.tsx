@@ -8,10 +8,18 @@ export interface IEnvironment {
   onPlay: (trackID: number, isPlaying: boolean) => void;
   onRotate: (isAnimating: boolean) => void;
   trackProgress: number;
+  onContentLoaded: () => void;
 }
 
 const Environment = memo(
-  ({ sceneRef, onProgres, onPlay, trackProgress, onRotate }: IEnvironment) => {
+  ({
+    sceneRef,
+    onProgres,
+    onPlay,
+    trackProgress,
+    onRotate,
+    onContentLoaded,
+  }: IEnvironment) => {
     const rendererWrapper = useRef<HTMLDivElement | null>(null);
 
     useEffect(
@@ -31,6 +39,7 @@ const Environment = memo(
             });
 
             await sceneRef.current.init();
+            onContentLoaded();
             sceneRef.current.animate();
           })();
     }, []);

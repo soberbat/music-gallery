@@ -45,7 +45,7 @@ export class Pane extends THREE.Group {
     const isVideoPane = this.isVideoPane;
     let geometry;
     let path;
-    let texture;
+    let texture: THREE.VideoTexture | THREE.Texture;
 
     if (isPaneBase) {
       geometry = new RoundedBoxGeometry(this.paneWidth, 9, 0.1, undefined);
@@ -56,11 +56,12 @@ export class Pane extends THREE.Group {
     }
 
     if (isVideoPane && isPaneBase) {
-      console.log(this.paneID);
-      texture = this.initVideoTexture();
+      texture = await this.initVideoTexture();
     } else {
       texture = await this.loadTexture(path);
     }
+
+    console.log(texture);
 
     const material = this.createMaterial(texture, isPaneBase);
 
@@ -103,13 +104,20 @@ export class Pane extends THREE.Group {
   getVideoSrc = () => `/textures/videos/video-${this.paneID}.mp4`;
 
   initVideoTexture = () => {
-    const video = document.createElement("video");
-    video.src = this.getVideoSrc();
-    video.loop = true;
-    video.muted = true;
-    video.autoplay = true;
-    video.play();
-    return new THREE.VideoTexture(video);
+    return new Promise<THREE.VideoTexture>((resolve) => {
+      const video = document.createElement("video");
+      video.src = this.getVideoSrc();
+      video.loop = true;
+      video.muted = true;
+      video.autoplay = true;
+      video.play();
+
+      video.oncanplaythrough = () => {
+        video.play();
+        console.log("-loadedd");
+        resolve(new THREE.VideoTexture(video));
+      };
+    });
   };
 
   positionPane = () => {
@@ -123,7 +131,6 @@ export class Pane extends THREE.Group {
 
   init = async () => {
     this.positionPane();
-    this.isVideoPane && this.initVideoTexture();
     await this.addPanesToScene();
     this.animate();
   };

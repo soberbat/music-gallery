@@ -12,6 +12,7 @@ import {
   NavigationContainer,
 } from "./styles/Main.styles";
 import { AnimatePresence } from "framer-motion";
+import LoadingPage from "./components/LoadingPage/LoadingPage";
 
 function App() {
   const scene = useRef<Scene | null>(null);
@@ -21,6 +22,7 @@ function App() {
   const [track, setTrack] = useState<string | undefined>(undefined);
   const [trackID, setTrackID] = useState<number | null>();
   const [trackProgress, setTrackProgress] = useState(0);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   const onNavigationProgress = useCallback((progres: number) => {
     setProgres(progres);
@@ -34,9 +36,9 @@ function App() {
     scene.current?.onWheel(undefined, true, progres);
   }, []);
 
-  const onNavigationClick = (isForwards: boolean) => {
+  const onNavigationClick = useCallback((isForwards: boolean) => {
     scene.current?.onWheel(undefined, false, 0, isForwards);
-  };
+  }, []);
 
   const onRotate = useCallback((isAnimating: boolean) => {
     setIsAnimating(isAnimating);
@@ -48,6 +50,8 @@ function App() {
     setTrackID(trackID + 1);
   }, []);
 
+  const onContentLoaded = useCallback(() => setHasLoaded(true), []);
+
   return (
     <AnimationContainer key="main">
       <Environment
@@ -56,6 +60,7 @@ function App() {
         sceneRef={scene}
         trackProgress={trackProgress}
         onRotate={onRotate}
+        onContentLoaded={onContentLoaded}
       />
 
       <Player
@@ -80,6 +85,8 @@ function App() {
       </AnimatePresence>
 
       <Overlay />
+
+      <AnimatePresence>{!hasLoaded && <LoadingPage />}</AnimatePresence>
     </AnimationContainer>
   );
 }

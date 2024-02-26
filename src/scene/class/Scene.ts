@@ -85,22 +85,22 @@ export class Scene {
     this.handleProgress = handleProgress;
     this.onPlay = onPlay;
     this.handleRotation = onRotation;
-    this.paneGroup = new THREE.Group();
 
+    this.paneGroup = new THREE.Group();
     this.progress = 0;
     this.absProgress = Math.abs(this.progress);
 
     this.addContainerSphere();
-    this.addPanes();
     this.resetPlaneRotations();
 
     document.addEventListener("wheel", this.createDebouncedEventListener());
     this._rendererContainer!.addEventListener("click", this.clickHandler);
   }
 
-  async init() {
+  init = async () => {
     this._raycaster.layers.set(1);
-  }
+    await this.addPanes();
+  };
 
   addContainerSphere = () => {
     const widthSegments = 10;
