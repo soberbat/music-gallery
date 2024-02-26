@@ -100,18 +100,20 @@ const Player = ({ trackSrc, onTrackProgres, isPlaying, trackID }: IPlayer) => {
 
           <AnimatePresence mode="wait">
             {isTrackLoaded ? (
-              <S.BottomPanel key={trackSrc}>
-                <S.PlayPauseWrap>
-                  <S.PlayPause isPlaying={isPlaying} />
-                  <S.Duration>{formatTime(track?.seek())}</S.Duration>
-                </S.PlayPauseWrap>
+              <S.BottomPanel key={"bottompanel"}>
+                <S.PanelInnerWrapper key={trackSrc}>
+                  <S.PlayPauseWrap>
+                    <S.PlayPause isPlaying={isPlaying} />
+                    <S.Duration>{formatTime(track?.seek())}</S.Duration>
+                  </S.PlayPauseWrap>
 
-                <PlayerProgressSlider
-                  updateTrack={updateTrackTime}
-                  progress={getProgress()}
-                />
+                  <PlayerProgressSlider
+                    updateTrack={updateTrackTime}
+                    progress={getProgress()}
+                  />
 
-                <S.Progress>{formatTime(track?.duration())}</S.Progress>
+                  <S.Progress>{formatTime(track?.duration())}</S.Progress>
+                </S.PanelInnerWrapper>
               </S.BottomPanel>
             ) : (
               <S.TrackLoadingIndicator key={"indicator"}>

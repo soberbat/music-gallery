@@ -75,6 +75,13 @@ export const BottomPanel = styled(motion.div).attrs({
 })`
   font-size: 0.8rem;
   margin-top: 1.2vh;
+`;
+
+export const PanelInnerWrapper = styled(motion.div).attrs({
+  animate: { opacity: 1 },
+  initial: { opacity: 0 },
+  exit: { opacity: 0 },
+})`
   align-items: center;
   justify-content: center;
   display: flex;
