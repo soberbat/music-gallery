@@ -114,7 +114,7 @@ const Player = ({ trackSrc, onTrackProgres, isPlaying, trackID }: IPlayer) => {
                 <S.Progress>{formatTime(track?.duration())}</S.Progress>
               </S.BottomPanel>
             ) : (
-              <S.TrackLoadingIndicator>
+              <S.TrackLoadingIndicator key={"indicator"}>
                 <S.MovingHandle />
               </S.TrackLoadingIndicator>
             )}

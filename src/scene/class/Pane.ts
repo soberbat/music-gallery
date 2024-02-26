@@ -110,11 +110,9 @@ export class Pane extends THREE.Group {
       video.loop = true;
       video.autoplay = true;
       video.muted = true;
-      video.play();
 
       video.oncanplaythrough = () => {
         video.play();
-        console.log("-loadedd");
         resolve(new THREE.VideoTexture(video));
       };
     });
