@@ -19,6 +19,8 @@ export class Pane extends THREE.Group {
   progresOverlay: THREE.Mesh | null = null;
   buttonOverlay: THREE.Mesh | null = null;
   angleIncrement = (2 * Math.PI) / 15;
+  hasAnimatedToVisible = false;
+  hasAnimatedToInvisible = false;
   trackProgres = 0;
   radius = 16;
 
@@ -60,8 +62,6 @@ export class Pane extends THREE.Group {
     } else {
       texture = await this.loadTexture(path);
     }
-
-    console.log(texture);
 
     const material = this.createMaterial(texture, isPaneBase);
 
@@ -108,8 +108,8 @@ export class Pane extends THREE.Group {
       const video = document.createElement("video");
       video.src = this.getVideoSrc();
       video.loop = true;
-      video.muted = true;
       video.autoplay = true;
+      video.muted = true;
       video.play();
 
       video.oncanplaythrough = () => {
@@ -135,24 +135,43 @@ export class Pane extends THREE.Group {
     this.animate();
   };
 
-  animateOpacity = (opacity: number) => {
-    new Tween(this.progresOverlay!.material).to({ opacity }, 200).start();
+  animateOpacity = (opacity: number, toVisible: boolean) => {
+    new Tween(this.progresOverlay!.material)
+      .to({ opacity }, 400)
+      .onComplete(() => {})
+      .onStart(() => {
+        if (toVisible) {
+          this.hasAnimatedToVisible = true;
+          return;
+        }
+        this.hasAnimatedToInvisible = true;
+      })
+      .start();
   };
 
   updateProgresOverlay = () => {
     if (isNaN(this.trackProgres)) return;
     const scaleX = (this.paneWidth * this.trackProgres) / 100;
     this.progresOverlay!.scale.x = scaleX;
-    this.animateOpacity(0.3);
   };
 
   animate() {
     requestAnimationFrame(this.animate.bind(this));
+
     if (this.isPlaying) {
+      if (!this.hasAnimatedToVisible) {
+        this.animateOpacity(0.5, true);
+      }
+
+      this.hasAnimatedToInvisible = false;
       this.updateProgresOverlay();
-    } else {
-      this.animateOpacity(0);
-      // this.progresOverlay!.scale.x = 0;
+      return;
     }
+
+    if (!this.hasAnimatedToInvisible) {
+      this.animateOpacity(0, false);
+    }
+
+    this.hasAnimatedToVisible = false;
   }
 }
