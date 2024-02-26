@@ -74,7 +74,6 @@ export const BottomPanel = styled(motion.div).attrs({
   exit: { opacity: 0 },
 })`
   font-size: 0.8rem;
-  /* background-color: blue; */
   margin-top: 1.2vh;
   align-items: center;
   justify-content: center;
@@ -108,4 +107,35 @@ export const Duration = styled.span`
 
 export const Progress = styled.span`
   flex: 0.03;
+`;
+
+export const TrackLoadingIndicator = styled(motion.div).attrs({
+  animate: { opacity: 1 },
+  initial: { opacity: 0 },
+  exit: { opacity: 0 },
+})`
+  width: 50%;
+  margin: 0 auto;
+  height: 2px;
+  margin-top: 2vh;
+  height: 10%;
+  border-radius: 12px;
+  background-color: gray;
+  position: relative;
+  overflow: hidden;
+`;
+
+export const MovingHandle = styled(motion.div).attrs({
+  animate: { marginLeft: "100%" },
+  initial: { marginLeft: 0 },
+  transition: {
+    repeat: Infinity,
+    repeatType: "loop",
+    duration: 1,
+  },
+})`
+  position: absolute;
+  height: 100%;
+  width: 60px;
+  background-color: gainsboro;
 `;

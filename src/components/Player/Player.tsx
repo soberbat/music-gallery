@@ -98,8 +98,8 @@ const Player = ({ trackSrc, onTrackProgres, isPlaying, trackID }: IPlayer) => {
             <S.Thumbnail key={thumbnailsrc} src={thumbnailsrc} />
           </S.TopPanel>
 
-          <AnimatePresence>
-            {isTrackLoaded && (
+          <AnimatePresence mode="wait">
+            {isTrackLoaded ? (
               <S.BottomPanel key={trackSrc}>
                 <S.PlayPauseWrap>
                   <S.PlayPause isPlaying={isPlaying} />
@@ -113,6 +113,10 @@ const Player = ({ trackSrc, onTrackProgres, isPlaying, trackID }: IPlayer) => {
 
                 <S.Progress>{formatTime(track?.duration())}</S.Progress>
               </S.BottomPanel>
+            ) : (
+              <S.TrackLoadingIndicator>
+                <S.MovingHandle />
+              </S.TrackLoadingIndicator>
             )}
           </AnimatePresence>
         </S.Container>
