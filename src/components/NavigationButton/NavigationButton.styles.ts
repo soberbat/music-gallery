@@ -28,5 +28,9 @@ export const DirectionIndicator = styled.img`
 
 export const Text = styled.span`
   color: white;
-  font-size: 0.9rem;
+  font-size: 0.6rem;
+
+  @media screen and (min-width: 1024px) {
+    font-size: 0.9rem;
+  }
 `;

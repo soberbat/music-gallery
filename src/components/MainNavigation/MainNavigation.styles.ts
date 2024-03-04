@@ -4,12 +4,18 @@ import NavigationButton from "../NavigationButton/NavigationButton";
 
 export const Container = styled.div`
   position: absolute;
-  width: 40vw;
+  width: 90%;
   height: auto;
   z-index: 2;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-size: 0.6rem;
+
+  @media screen and (min-width: 1024px) {
+    width: 40vw;
+    font-size: 1rem;
+  }
 `;
 
 export const InnerContainer = styled.div`
@@ -38,4 +44,6 @@ export const NameContainer = styled.div`
 export const PaneName = styled(motion.span).attrs({
   animate: { opacity: 1 },
   initial: { opacity: 0 },
-})``;
+})`
+  color: white;
+`;

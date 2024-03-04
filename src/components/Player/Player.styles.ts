@@ -9,7 +9,7 @@ export const Container = styled(motion.div).attrs({
   transition: { type: "spring", duration: 1.5 },
 })`
   background-color: white;
-  width: 80vw;
+  width: 95vw;
   height: 14vh;
   z-index: 3;
   position: fixed;
@@ -22,9 +22,14 @@ export const Container = styled(motion.div).attrs({
   text-align: center;
   border: 1px solid rgba(254, 254, 254, 0.216);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  padding: 2.5vh 3vh;
+  padding: 1vh 1.5vh;
   box-sizing: border-box;
   color: white;
+
+  @media screen and (min-width: 1024px) {
+    width: 80vw;
+    padding: 2.5vh 3vh;
+  }
 `;
 
 export const TopPanel = styled.div`
@@ -43,18 +48,26 @@ export const Composer = styled.h5`
   padding: 0;
   text-align: left;
   text-transform: uppercase;
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   font-weight: 300;
   margin-bottom: -0.5vh;
   word-spacing: 2vw;
+
+  @media screen and (min-width: 1024px) {
+    font-size: 0.7rem;
+  }
 `;
 
 export const Title = styled.h3`
   margin: 0;
   padding: 0;
-  font-size: 1rem;
+  font-size: 0.6rem;
   text-align: left;
   font-weight: 500;
+
+  @media screen and (min-width: 1024px) {
+    font-size: 1rem;
+  }
 `;
 
 export const Thumbnail = styled(motion.img).attrs({
@@ -62,10 +75,15 @@ export const Thumbnail = styled(motion.img).attrs({
   initial: { opacity: 0 },
   exit: { opacity: 0 },
 })`
-  width: 3rem;
-  height: 3rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 100%;
   margin-left: auto;
+
+  @media screen and (min-width: 1024px) {
+    width: 3rem;
+    height: 3rem;
+  }
 `;
 
 export const BottomPanel = styled(motion.div).attrs({

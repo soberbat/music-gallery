@@ -14,6 +14,11 @@ export const Container = styled.div`
   top: 50%;
   left: 5%;
   transform: translate(-50%, -50%);
+  display: none;
+
+  @media screen and (min-width: 1024px) {
+    display: block;
+  }
 `;
 
 export const BackgroundOverlay = styled.div`

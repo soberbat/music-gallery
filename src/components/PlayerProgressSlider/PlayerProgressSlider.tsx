@@ -40,14 +40,14 @@ const PlayerProgressSlider = ({
   };
 
   useEffect(() => {
-    document.addEventListener("mouseup", onMouseUp);
-    return () => document.removeEventListener("mouseup", onMouseUp);
-  }, [canSlide, timeToSlideTo]);
-
-  useEffect(() => {
     setBoundingBox(pBarRef.current && pBarRef.current.getBoundingClientRect());
     document.addEventListener("mousemove", onMouseMove);
   }, [pBarRef.current]);
+
+  useEffect(() => {
+    document.addEventListener("mouseup", onMouseUp);
+    return () => document.removeEventListener("mouseup", onMouseUp);
+  }, [canSlide, timeToSlideTo]);
 
   return (
     <S.Container>
