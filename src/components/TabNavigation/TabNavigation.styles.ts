@@ -17,7 +17,7 @@ export const Container = styled.div`
   display: none;
 
   @media screen and (min-width: 1024px) {
-    display: block;
+    display: flex;
   }
 `;
 
