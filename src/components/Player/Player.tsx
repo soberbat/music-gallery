@@ -103,7 +103,6 @@ const Player = ({ trackSrc, onTrackProgres, isPlaying, trackID }: IPlayer) => {
               <S.BottomPanel key={"bottompanel"}>
                 <S.PanelInnerWrapper key={trackSrc}>
                   <S.PlayPauseWrap>
-                    <S.PlayPause isPlaying={isPlaying} />
                     <S.Duration>{formatTime(track?.seek())}</S.Duration>
                   </S.PlayPauseWrap>
 

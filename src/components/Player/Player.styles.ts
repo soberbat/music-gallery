@@ -114,6 +114,7 @@ export const PlayPauseWrap = styled.div`
   flex: 0.04;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10%;
   user-select: none;
 `;

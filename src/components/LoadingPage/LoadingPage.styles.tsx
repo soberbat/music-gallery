@@ -17,6 +17,7 @@ export const Container = styled(motion.div).attrs({
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  color: #f5f5f5b6;
 `;
 
 export const LoadingText = styled.h1`
@@ -42,4 +43,8 @@ export const Spinner = styled.div`
   border-left-color: #2e2e2e;
   border-radius: 50%;
   animation: ${rotate} 1s linear infinite;
+`;
+
+export const UserManual = styled.h4`
+  font-weight: 300;
 `;
